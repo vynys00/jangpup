@@ -1,4 +1,5 @@
 require("dotenv").config();
+const keep_alive = require('./keep_alive.js');
 const { firefox } = require("playwright-firefox");
 const axios = require("axios");
 const { Client, GatewayIntentBits } = require("discord.js");
