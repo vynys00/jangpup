@@ -26,7 +26,7 @@ async function downloadInstagramMedia(url, message) {
 
     // Wait for single or multiple post container to load
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 10000,
+      timeout: 30000,
     });
 
     const mediaUrls = await getUniqueMediaUrls(page);
@@ -167,7 +167,7 @@ async function getUniqueMediaUrls(page) {
       await page.waitForSelector(
         ".x1iyjqo2 .x5yr21d.x1uhb9sk.xh8yej3, ._acaz ._aagv, ._acaz ._aap0",
         {
-          timeout: 10000,
+          timeout: 30000,
         }
       );
     }
