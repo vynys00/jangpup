@@ -24,6 +24,7 @@ async function downloadWeverseMedia(url, message) {
 
     await browser.close();
   } catch (error) {
+    await browser.close();
     console.log(error);
   }
 }

@@ -83,6 +83,7 @@ async function downloadInstagramMedia(url, message) {
 
     await browser.close();
   } catch (error) {
+    await browser.close();
     console.error("Error:", error);
   }
 }

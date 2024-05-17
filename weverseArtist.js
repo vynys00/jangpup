@@ -78,6 +78,7 @@ async function downloadWeverseArtistMedia(url, message) {
 
     await browser.close();
   } catch (error) {
+    await browser.close();
     console.log(error);
   }
 }
@@ -100,8 +101,8 @@ async function getUniqueMediaUrls(page) {
   const retrievedUrls = new Set();
   const wvPhotos = await page.$$eval(".photo_wrap img", (imgs) =>
     imgs.map((img) => ({
-      url: img.src.split('?')[0], // Remove query parameters
-      type: "image"
+      url: img.src.split("?")[0], // Remove query parameters
+      type: "image",
     }))
   );
 
