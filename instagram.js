@@ -104,7 +104,7 @@ async function sendMediaAttachments(url, attachments, initialMessage) {
 async function getUniqueMediaUrls(page) {
   let mediaUrls = [];
   const retrievedUrls = new Set();
-  let hasNextPage = false;
+  let hasNextPage = true;
   const nextButton = await page.$('.x1iyjqo2 ._aao_ button[aria-label="Next"]');
   if (!nextButton) {
     // Check for single photo posts
@@ -159,7 +159,7 @@ async function getUniqueMediaUrls(page) {
       '.x1iyjqo2 ._aao_ button[aria-label="Next"]'
     );
     if (!nextButton) {
-      hasNextPage = true;
+      hasNextPage = false;
     } else {
       // Click on the "Next" button to load the next page
       await nextButton.click();
