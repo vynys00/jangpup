@@ -25,7 +25,7 @@ async function downloadInstagramMedia(url, message) {
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
     // Wait for single or multiple post container to load
-    await page.waitForSelector("._aap0, x1lliihq.xh8yej3, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
       timeout: 30000,
     });
 
@@ -104,7 +104,7 @@ async function sendMediaAttachments(url, attachments, initialMessage) {
 async function getUniqueMediaUrls(page) {
   let mediaUrls = [];
   const retrievedUrls = new Set();
-  let hasNextPage = true;
+  let hasNextPage = false;
   const nextButton = await page.$('.x1iyjqo2 ._aao_ button[aria-label="Next"]');
   if (!nextButton) {
     // Check for single photo posts
@@ -159,7 +159,7 @@ async function getUniqueMediaUrls(page) {
       '.x1iyjqo2 ._aao_ button[aria-label="Next"]'
     );
     if (!nextButton) {
-      hasNextPage = false;
+      hasNextPage = true;
     } else {
       // Click on the "Next" button to load the next page
       await nextButton.click();
