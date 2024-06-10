@@ -13,11 +13,11 @@ async function getImageWidth(buffer) {
 }
 
 async function downloadInstagramMedia(url, message) {
+  // Launch Firefox browser using Playwright
+  const browser = await firefox.launch();
   try {
     const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
 
-    // Launch Firefox browser using Playwright
-    const browser = await firefox.launch();
     const context = await browser.newContext();
 
     // Navigate to the Instagram URL
