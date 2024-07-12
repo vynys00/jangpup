@@ -20,9 +20,15 @@ async function downloadInstagramMedia(url, message) {
   }});
   try {
     const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
-    const iphone13 = devices["iPhone 13"];
+
     const context = await browser.newContext({
-      ...iphone13,
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        // It is important to define the `isMobile` property after destructuring `devices`,
+        // since devices also define the `isMobile` for that device.
+        isMobile: false,
+      },
     });
 
     // Navigate to the Instagram URL
