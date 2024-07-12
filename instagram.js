@@ -17,7 +17,7 @@ async function downloadInstagramMedia(url, message) {
   const browser = await chromium.launch();
   try {
     const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
-    const iphone13 = devices['iPhone 13'];
+    const iphone13 = devices["iPhone 13"];
     const context = await browser.newContext({
       ...iphone13,
     });
@@ -43,6 +43,7 @@ async function downloadInstagramMedia(url, message) {
       .replace(/-/g, "_");
 
     const attachments = [];
+    console.log(mediaUrls);
     let skippedFiles = 0;
     for (let i = 0; i < mediaUrls.length; i++) {
       let response;
