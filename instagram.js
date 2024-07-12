@@ -1,4 +1,4 @@
-const { devices, chromium } = require("playwright");
+const { devices, firefox } = require("playwright");
 const axios = require("axios");
 const sharp = require("sharp");
 
@@ -14,21 +14,19 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await chromium.launch({ logger: {
-    isEnabled: (name, severity) => name === 'api',
-    log: (name, severity, message, args) => console.log(`${name} ${message}`)
-  }});
+  const browser = await firefox.launch({
+    logger: {
+      isEnabled: (name, severity) => name === "api",
+      log: (name, severity, message, args) => console.log(`${name} ${message}`),
+    },
+  });
   try {
     const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
 
     const context = await browser.newContext({
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        // It is important to define the `isMobile` property after destructuring `devices`,
-        // since devices also define the `isMobile` for that device.
-        isMobile: false,
-      },
+      viewport: { width: 412, height: 915 },
+      userAgent:
+        "Mozilla/5.0 (Linux; Android 11; SAMSUNG SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.2 Chrome/87.0.4280.141 Mobile Safari/537.36",
     });
 
     // Navigate to the Instagram URL
