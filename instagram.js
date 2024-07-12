@@ -1,4 +1,4 @@
-const { firefox } = require("playwright-firefox");
+const { firefox, devices, chromium } = require("playwright-firefox");
 const axios = require("axios");
 const sharp = require("sharp");
 
@@ -14,11 +14,13 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await firefox.launch();
+  const browser = await chromium.launch();
   try {
     const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
-
-    const context = await browser.newContext();
+    const iphone13 = devices['iPhone 13'];
+    const context = await browser.newContext({
+      ...iphone13,
+    });
 
     // Navigate to the Instagram URL
     const page = await context.newPage();
