@@ -14,7 +14,10 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ logger: {
+    isEnabled: (name, severity) => name === 'api',
+    log: (name, severity, message, args) => console.log(`${name} ${message}`)
+  }});
   try {
     const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
     const iphone13 = devices["iPhone 13"];
