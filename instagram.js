@@ -26,12 +26,6 @@ async function downloadInstagramMedia(url, message) {
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
-    console.log("waiting page");
-    // Wait for single or multiple post container to load
-    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 30000,
-    });
-
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
@@ -168,13 +162,6 @@ async function getUniqueMediaUrls(page) {
       // Click on the "Next" button to load the next page
       await nextButton.click();
 
-      // Wait for the media container to load on the next page
-      await page.waitForSelector(
-        ".x1iyjqo2 .x5yr21d.x1uhb9sk.xh8yej3, ._acaz ._aagv, ._acaz ._aap0",
-        {
-          timeout: 30000,
-        }
-      );
     }
   }
   return mediaUrls;
