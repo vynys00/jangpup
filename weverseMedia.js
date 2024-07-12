@@ -1,11 +1,10 @@
-const { firefox } = require("playwright-firefox");
-const axios = require("axios");
+const { chromium } = require("playwright");
 
 async function downloadWeverseMedia(url, message) {
   try {
     const initialMessage = await message.reply("Retrieving yakgwa goodies...");
     // Launch Firefox browser using Playwright
-    const browser = await firefox.launch();
+    const browser = await chromium.launch();
     const context = await browser.newContext();
     // Navigate to the Instagram URL
     const page = await context.newPage();

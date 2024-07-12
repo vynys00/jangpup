@@ -1,4 +1,4 @@
-const { firefox, devices, chromium } = require("playwright-firefox");
+const { devices, chromium } = require("playwright");
 const axios = require("axios");
 const sharp = require("sharp");
 
