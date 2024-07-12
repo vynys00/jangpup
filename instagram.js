@@ -26,6 +26,7 @@ async function downloadInstagramMedia(url, message) {
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
+    console.log("waiting page");
     // Wait for single or multiple post container to load
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
       timeout: 30000,
