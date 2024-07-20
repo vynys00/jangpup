@@ -20,17 +20,16 @@ async function downloadInstagramMedia(url, message) {
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
     },
   });
+  const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
+
+  const context = await browser.newContext({
+    viewport: { width: 412, height: 915 },
+    hasTouch: true,
+    userAgent:
+      "Mozilla/5.0 (Linux; Android 11; SAMSUNG SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.2 Chrome/87.0.4280.141 Mobile Safari/537.36",
+    bypassCSP: true,
+  });
   try {
-    const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
-
-    const context = await browser.newContext({
-      viewport: { width: 412, height: 915 },
-      hasTouch: true,
-      userAgent:
-        "Mozilla/5.0 (Linux; Android 11; SAMSUNG SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.2 Chrome/87.0.4280.141 Mobile Safari/537.36",
-      bypassCSP: true,
-    });
-
     // Navigate to the Instagram URL
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
