@@ -36,6 +36,7 @@ async function downloadInstagramMedia(url, message) {
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
     console.log("waiting page");
+    console.log("Current URL:", page.url());
     // Wait for single or multiple post container to load
     const postContainerLocator = await page.locator("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv");
   await postContainerLocator.waitFor({ timeout: 30000 });
