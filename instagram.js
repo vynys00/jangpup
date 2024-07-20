@@ -11,14 +11,7 @@ async function getImageWidth(buffer) {
     return -1;
   }
 }
-async function login(page) {
-  // Implement your login process here
-  // Example: Enter credentials, click login button, wait for login success indicator
-  await page.type('input[name="username"]', "latteyeeun");
-  await page.type('input[name="password"]', "123123Vynys!");
-  await page.click('button[type="submit"]');
-  await page.waitForNavigation({ waitUntil: "domcontentloaded" });
-}
+
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
   const browser = await firefox.launch({
@@ -43,24 +36,11 @@ async function downloadInstagramMedia(url, message) {
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
     console.log("waiting page");
-    console.log(page.url());
     // Wait for single or multiple post container to load
-    const isLoggedIn = page.url() === url;
-
-    if (!isLoggedIn) {
-      // Perform login process
-      await login(page);
-
-      // After login, wait for specific elements to ensure we're on the correct page
-      await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-        timeout: 30000,
-      });
-    } else {
-      // User is already logged in, wait for specific elements
-      await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-        timeout: 30000,
-      });
-    }
+    console.log("current page", page.url());
+    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+      timeout: 30000,
+    });
 
     const mediaUrls = await getUniqueMediaUrls(page);
 
