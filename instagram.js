@@ -14,10 +14,10 @@ async function getImageWidth(buffer) {
 async function login(page) {
   // Implement your login process here
   // Example: Enter credentials, click login button, wait for login success indicator
-  await page.type('input[name="username"]', 'latteyeeun');
-  await page.type('input[name="password"]', '123123Vynys!');
+  await page.type('input[name="username"]', "latteyeeun");
+  await page.type('input[name="password"]', "123123Vynys!");
   await page.click('button[type="submit"]');
-  await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  await page.waitForNavigation({ waitUntil: "domcontentloaded" });
 }
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
@@ -32,7 +32,7 @@ async function downloadInstagramMedia(url, message) {
 
     const context = await browser.newContext({
       viewport: { width: 412, height: 915 },
-      hasTouch:true,
+      hasTouch: true,
       userAgent:
         "Mozilla/5.0 (Linux; Android 11; SAMSUNG SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.2 Chrome/87.0.4280.141 Mobile Safari/537.36",
       bypassCSP: true,
@@ -43,18 +43,23 @@ async function downloadInstagramMedia(url, message) {
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
     console.log("waiting page");
+    console.log(page.url());
     // Wait for single or multiple post container to load
-    const isLoggedIn = page.url() === url
+    const isLoggedIn = page.url() === url;
 
     if (!isLoggedIn) {
       // Perform login process
       await login(page);
 
       // After login, wait for specific elements to ensure we're on the correct page
-      await page.waitForSelector('._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv', { timeout: 30000 });
+      await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+        timeout: 30000,
+      });
     } else {
       // User is already logged in, wait for specific elements
-      await page.waitForSelector('._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv', { timeout: 30000 });
+      await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+        timeout: 30000,
+      });
     }
 
     const mediaUrls = await getUniqueMediaUrls(page);
