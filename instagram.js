@@ -1,4 +1,4 @@
-const { firefox } = require("playwright");
+const {  firefox } = require("playwright");
 const axios = require("axios");
 const sharp = require("sharp");
 
@@ -20,16 +20,17 @@ async function downloadInstagramMedia(url, message) {
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
     },
   });
-  const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
-
-  const context = await browser.newContext({
-    viewport: { width: 412, height: 915 },
-    hasTouch: true,
-    userAgent:
-      "Mozilla/5.0 (Linux; Android 11; SAMSUNG SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.2 Chrome/87.0.4280.141 Mobile Safari/537.36",
-    bypassCSP: true,
-  });
   try {
+    const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
+
+    const context = await browser.newContext({
+      viewport: { width: 810, height: 1080 },
+      hasTouch:true,
+      userAgent:
+        "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
+      bypassCSP: true,
+    });
+
     // Navigate to the Instagram URL
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -39,8 +40,6 @@ async function downloadInstagramMedia(url, message) {
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
       timeout: 30000,
     });
-
-    console.log("current page", page.url());
 
     const mediaUrls = await getUniqueMediaUrls(page);
 
@@ -111,8 +110,22 @@ async function sendMediaAttachments(url, attachments, initialMessage) {
     });
   });
 
-  await initialMessage.edit({ content: `<${url}>`, files: files });
-  attachments.length = 0;
+  if (files.length <= 10) {
+    // Send a single message with all attachments
+    await initialMessage.edit({ content: `<${url}>`, files: files });
+  } else {
+    // Split attachments into two messages
+    const firstBatch = files.slice(0, 10);
+    const secondBatch = files.slice(10);
+
+    await initialMessage.edit({ content: `<${url}>`, files: firstBatch });
+
+    // Send a new message for the second batch
+    await initialMessage.channel.send({ content: `<${url}>`, files: secondBatch });
+  }
+
+  // Clear the attachments array
+  files.length = 0;
 }
 
 async function getUniqueMediaUrls(page) {
