@@ -1,16 +1,5 @@
 const {  firefox } = require("playwright");
 const axios = require("axios");
-const sharp = require("sharp");
-
-async function getImageWidth(buffer) {
-  try {
-    const metadata = await sharp(buffer).metadata();
-    return metadata.width;
-  } catch (error) {
-    console.error("Error getting image width:", error);
-    return -1;
-  }
-}
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
@@ -65,17 +54,6 @@ async function downloadInstagramMedia(url, message) {
         console.log(`Unsupported media type: ${mediaUrls[i].type}. Skipping.`);
         skippedFiles++;
         continue;
-      }
-
-      if (mediaUrls[i].type === "image") {
-        const width = await getImageWidth(response.data);
-        if (width < 1000) {
-          console.log(
-            `Image ${i + 1} has width less than 1000 pixels. Skipping.`
-          );
-          skippedFiles++;
-          continue;
-        }
       }
 
       const indexAdjusted = i - skippedFiles;
