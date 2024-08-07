@@ -1,6 +1,5 @@
 const { firefox } = require("playwright");
 const axios = require("axios");
-const sharp = require("sharp");
 
 async function downloadWeverseArtistMedia(url, message) {
   try {
