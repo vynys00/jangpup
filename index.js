@@ -34,8 +34,8 @@ client.on("messageCreate", async (message) => {
     }
 
     downloadInstagramMedia(instagramUrl, message)
-      .then(() => console.log("Media downloaded successfully"))
-      .catch((error) => console.error("Error downloading media:", error));
+      // .then(() => console.log("Media downloaded successfully"))
+      // .catch((error) => console.error("Error downloading media:", error));
   }
 
   if (message.content.startsWith("!wv")) {

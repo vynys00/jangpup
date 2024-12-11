@@ -1,9 +1,21 @@
-const {  firefox } = require("playwright");
+const { firefox } = require("playwright");
 const axios = require("axios");
+const sharp = require("sharp");
+
+async function getImageWidth(buffer) {
+  try {
+    const metadata = await sharp(buffer).metadata();
+    return metadata.width;
+  } catch (error) {
+    console.error("Error getting image width:", error);
+    return -1;
+  }
+}
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
   const browser = await firefox.launch({
+
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
@@ -14,7 +26,6 @@ async function downloadInstagramMedia(url, message) {
 
     const context = await browser.newContext({
       viewport: { width: 810, height: 1080 },
-      hasTouch:true,
       userAgent:
         "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
       bypassCSP: true,
@@ -29,7 +40,10 @@ async function downloadInstagramMedia(url, message) {
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
       timeout: 30000,
     });
-
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+      timeout: 30000,
+    });
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
@@ -54,6 +68,17 @@ async function downloadInstagramMedia(url, message) {
         console.log(`Unsupported media type: ${mediaUrls[i].type}. Skipping.`);
         skippedFiles++;
         continue;
+      }
+
+      if (mediaUrls[i].type === "image") {
+        const width = await getImageWidth(response.data);
+        if (width < 1000) {
+          console.log(
+            `Image ${i + 1} has width less than 1000 pixels. Skipping.`
+          );
+          skippedFiles++;
+          continue;
+        }
       }
 
       const indexAdjusted = i - skippedFiles;
@@ -161,7 +186,7 @@ async function getUniqueMediaUrls(page) {
 
     // Check for the "Next" button within the same container
     const nextButton = await page.$(
-      '.x1iyjqo2 ._aao_ button[aria-label="Next"]'
+      '._aatg ._aatk._aatn button[aria-label="Next"]'
     );
     if (!nextButton) {
       hasNextPage = false;
