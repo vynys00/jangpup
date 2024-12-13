@@ -2,10 +2,57 @@ const { firefox } = require("playwright");
 const axios = require("axios");
 
 async function downloadWeverseArtistMedia(url, message) {
+  const browser = await firefox.launch();
+  
+    // Function to add current year if year is missing and extract date
+    function formatDateWithYearIfMissing(dateString) {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+    
+      // Regular expression to extract the month abbreviation and day
+      const dateRegex = /([A-Za-z]{3}) (\d{1,2}),/;
+    
+      // Try to match the new format "Dec 9, ..."
+      const dateMatch = dateString.match(dateRegex);
+    
+      if (!dateMatch) {
+        throw new Error('Date format invalid or missing from dateString: ' + dateString);
+      }
+    
+      const monthAbbreviation = dateMatch[1];
+      const day = dateMatch[2];
+    
+      // Convert month abbreviation to number (e.g., 'Dec' -> 12)
+      const monthMap = {
+        Jan: '01',
+        Feb: '02',
+        Mar: '03',
+        Apr: '04',
+        May: '05',
+        Jun: '06',
+        Jul: '07',
+        Aug: '08',
+        Sep: '09',
+        Oct: '10',
+        Nov: '11',
+        Dec: '12',
+      };
+    
+      const month = monthMap[monthAbbreviation];
+    
+      if (!month) {
+        throw new Error('Invalid month abbreviation in date string: ' + monthAbbreviation);
+      }
+    
+      // If the year is missing, append the current year to the date
+      const formattedDate = `${currentYear}_${month}_${day.padStart(2, '0')}`;
+    
+      return formattedDate;
+    }
   try {
     const initialMessage = await message.reply("Retrieving yakgwa goodies...");
     // Launch Firefox browser using Playwright
-    const browser = await firefox.launch();
+    
     const context = await browser.newContext();
     // Navigate to the Instagram URL
     const page = await context.newPage();
@@ -24,26 +71,6 @@ async function downloadWeverseArtistMedia(url, message) {
       (element) => element.textContent.trim()
     );
 
-    // Function to add current year if year is missing and extract date
-    function formatDateWithYearIfMissing(dateString) {
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const yearRegex = /\d{4}/;
-
-      // Regular expression to extract date in the format "MM. DD."
-      const dateRegex = /(\d{2}\. \d{2}\.)/;
-
-      // If year is missing, append current year to the date
-      if (!yearRegex.test(dateString)) {
-        return `${currentYear}_${dateString
-          .match(dateRegex)[0]
-          .replace(/\./g, "_")
-          .replace(/\s/g, "")}`;
-      } else {
-        // Year is present, extract date and return
-        return dateString.replace(/\./g, "_").replace(/\s/g, "").slice(0, 11);
-      }
-    }
 
     const formattedPostDate = formatDateWithYearIfMissing(postDateText);
     console.log(formattedPostDate); // Output the formatted date
