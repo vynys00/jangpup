@@ -45,7 +45,7 @@ async function downloadWeverseArtistMedia(url, message) {
       }
     
       // If the year is missing, append the current year to the date
-      const formattedDate = `${currentYear}_${month}_${day.padStart(2, '0')}_`;
+      const formattedDate = `${currentYear}_${month}${day.padStart(2, '0')}_`;
     
       return formattedDate;
     }
