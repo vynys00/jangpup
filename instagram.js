@@ -1,6 +1,5 @@
-
+const { firefox } = require("playwright");
 const axios = require("axios");
-const { chromium } = require("playwright");
 const sharp = require("sharp");
 
 async function getImageWidth(buffer) {
@@ -15,8 +14,8 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await chromium.launch({
-    headless: true,
+  const browser = await firefox.launch({
+
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
@@ -38,13 +37,12 @@ async function downloadInstagramMedia(url, message) {
 
     console.log("waiting page");
     // Wait for single or multiple post container to load
-    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 30000,
-    });
+
+    const orderSent = page.locator('._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv');
+await orderSent.waitFor();
+
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 30000,
-    });
+    await orderSent.waitFor();
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
