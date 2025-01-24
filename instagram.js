@@ -20,7 +20,7 @@ async function downloadInstagramMedia(url, message) {
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
     },
   });
-  try {
+  
     const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
 
     const context = await browser.newContext({
@@ -29,7 +29,7 @@ async function downloadInstagramMedia(url, message) {
         "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
       bypassCSP: true,
     });
-
+try {
     // Navigate to the Instagram URL
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -38,9 +38,9 @@ async function downloadInstagramMedia(url, message) {
     // Wait for single or multiple post container to load
 
     const orderSent = page.locator('._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv');
-    await orderSent.waitFor({state: 'attached'});
+await orderSent.waitFor({state: 'attached'});
 
-    await page.reload();
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await orderSent.waitFor();
     const mediaUrls = await getUniqueMediaUrls(page);
 
@@ -98,6 +98,8 @@ async function downloadInstagramMedia(url, message) {
     await context.close();
     await browser.close();
   } catch (error) {
+    await page.close();
+    await context.close();
     await browser.close();
     console.error("Error:", error);
   }
