@@ -24,7 +24,7 @@ async function downloadInstagramMedia(url, message) {
   const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
 
   const context = await browser.newContext({
-    viewport: { width: 810, height: 1080 },
+    viewport: { width: 1080, height: 810 },
     userAgent:
       "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
     bypassCSP: true,
