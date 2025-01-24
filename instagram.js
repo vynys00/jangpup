@@ -14,7 +14,7 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await firefox.launch({ignoreDefaultArgs: ['--enable-application-cache'],
+  const browser = await firefox.launch({
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
