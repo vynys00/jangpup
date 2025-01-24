@@ -28,6 +28,7 @@ async function downloadInstagramMedia(url, message) {
     userAgent:
       "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
     bypassCSP: true,
+    
   });
   const page = await context.newPage();
   try {
@@ -37,7 +38,10 @@ async function downloadInstagramMedia(url, message) {
 
     console.log("waiting page");
     // Wait for single or multiple post container to load
-
+    page.on('console', (msg) => {
+      console.log(msg);
+    });
+  
     const orderSent = page.locator("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv");
     await orderSent.waitFor({ state: "attached" });
 
