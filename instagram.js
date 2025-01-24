@@ -14,7 +14,7 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await firefox.launch({ignoreDefaultArgs: ['--enable-application-cache'],
+  const browser = await firefox.launch({
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
@@ -40,7 +40,7 @@ async function downloadInstagramMedia(url, message) {
     const orderSent = page.locator('._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv');
     await orderSent.waitFor({state: 'attached'});
 
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.reload();
     await orderSent.waitFor();
     const mediaUrls = await getUniqueMediaUrls(page);
 
