@@ -38,11 +38,11 @@ async function downloadInstagramMedia(url, message) {
     console.log("waiting page");
     // Wait for single or multiple post container to load
 
-    const orderSent = page.locator("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv");
-    await orderSent.waitFor({ state: "attached" });
+    // const orderSent = page.locator("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv");
+    // await orderSent.waitFor({ state: "attached" });
 
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await orderSent.waitFor();
+    // await page.reload({ waitUntil: "domcontentloaded" });
+    // await orderSent.waitFor();
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
