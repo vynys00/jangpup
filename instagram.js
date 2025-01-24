@@ -41,7 +41,7 @@ async function downloadInstagramMedia(url, message) {
     await orderSent.waitFor({state: 'attached'});
 
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await orderSent.waitFor();
+    await orderSent.waitFor({state: 'attached'});
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
