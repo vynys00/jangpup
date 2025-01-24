@@ -46,8 +46,8 @@ async function downloadInstagramMedia(url, message) {
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
-    const postDate = await page.$eval("time", (time) =>
-      time.getAttribute("datetime")
+    const postDate = await page.$eval('time.x1p4m5qa', (time) =>
+      time.getAttribute('datetime')
     );
     const formattedPostDate = new Date(postDate)
       .toISOString()
