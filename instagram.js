@@ -27,7 +27,7 @@ async function downloadInstagramMedia(url, message) {
       viewport: { width: 810, height: 1080 },
       userAgent:
         "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
-      bypassCSP: true,storageState: null,
+      bypassCSP: true,
     });
 
     // Navigate to the Instagram URL
