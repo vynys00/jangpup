@@ -1,4 +1,4 @@
-const { chromium } = require("playwright");
+const { firefox } = require("playwright");
 const axios = require("axios");
 const sharp = require("sharp");
 
@@ -14,8 +14,7 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await chromium.launch({
-
+  const browser = await firefox.launch({ignoreDefaultArgs: ['--enable-application-cache'],
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
@@ -28,7 +27,7 @@ async function downloadInstagramMedia(url, message) {
       viewport: { width: 810, height: 1080 },
       userAgent:
         "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
-      bypassCSP: true,
+      bypassCSP: true,storageState: null,
     });
 
     // Navigate to the Instagram URL
@@ -95,7 +94,8 @@ async function downloadInstagramMedia(url, message) {
     }
 
     await sendMediaAttachments(url, attachments, initialMessage);
-
+    await page.close();
+    await context.close();
     await browser.close();
   } catch (error) {
     await browser.close();
