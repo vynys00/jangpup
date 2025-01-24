@@ -24,9 +24,9 @@ async function downloadInstagramMedia(url, message) {
   const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
 
   const context = await browser.newContext({
-    viewport: { width: 1080, height: 810 },
+    viewport: { width: 600, height: 960 },
     userAgent:
-      "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
+      "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 7 Build/MOB30X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36",
     bypassCSP: true,
     
   });
