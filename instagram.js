@@ -37,13 +37,16 @@ async function downloadInstagramMedia(url, message) {
 
     console.log("waiting page");
     // Wait for single or multiple post container to load
-    page.on('console', (msg) => {
-      console.log(msg);
-    });
-
-    await page.reload({waitUntil: 'domcontentloaded'});
+    // page.on('console', (msg) => {
+    //   console.log(msg);
+    // });
+  
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      state: 'attached'
+      timeout: 30000,
+    });
+    await page.reload();
+    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+      timeout: 30000,
     });
     const mediaUrls = await getUniqueMediaUrls(page);
 
