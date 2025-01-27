@@ -24,11 +24,10 @@ async function downloadInstagramMedia(url, message) {
   const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
 
   const context = await browser.newContext({
-    viewport: { width: 600, height: 960 },
+    viewport: { width: 810, height: 1080 },
     userAgent:
-      "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 7 Build/MOB30X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36",
+      "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
     bypassCSP: true,
-    
   });
   const page = await context.newPage();
   try {
@@ -42,13 +41,10 @@ async function downloadInstagramMedia(url, message) {
       console.log(msg);
     });
   
-    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 30000,
-    });
+    const orderSent = page.locator("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv");
+    await orderSent.waitFor({ state: "attached" });
+
     await page.goto(url, { waitUntil: "domcontentloaded" });
-    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 30000,
-    });
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
