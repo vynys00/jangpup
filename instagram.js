@@ -40,10 +40,7 @@ async function downloadInstagramMedia(url, message) {
     // page.on('console', (msg) => {
     //   console.log(msg);
     // });
-  
-    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 30000,
-    });
+
     await page.reload();
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
       timeout: 30000,
