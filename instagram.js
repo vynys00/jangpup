@@ -37,11 +37,11 @@ async function downloadInstagramMedia(url, message) {
 
     console.log("waiting page");
     // Wait for single or multiple post container to load
-    // page.on('console', (msg) => {
-    //   console.log(msg);
-    // });
+    page.on('console', (msg) => {
+      console.log(msg);
+    });
 
-    await page.reload();
+    await page.reload({waitUntil: 'domcontentloaded'});
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
       timeout: 30000,
     });
