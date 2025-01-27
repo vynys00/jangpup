@@ -43,7 +43,7 @@ async function downloadInstagramMedia(url, message) {
 
     await page.reload({waitUntil: 'domcontentloaded'});
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
-      timeout: 30000,
+      state: 'attached'
     });
     const mediaUrls = await getUniqueMediaUrls(page);
 
