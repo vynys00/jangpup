@@ -14,7 +14,7 @@ async function getImageWidth(buffer) {
 
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
-  const browser = await chromium.launch({
+  const browser = await firefox.launch({
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
@@ -38,15 +38,17 @@ async function downloadInstagramMedia(url, message) {
 
     console.log("waiting page");
     // Wait for single or multiple post container to load
-    page.on('console', (msg) => {
-      console.log(msg);
-    });
+    // page.on('console', (msg) => {
+    //   console.log(msg);
+    // });
   
-    const orderSent = page.locator("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv");
-    await orderSent.waitFor({ state: "attached" });
-
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await orderSent.waitFor();
+    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+      timeout: 30000,
+    });
+    await page.goto(url, { waitUntil: "domcontentloaded" });
+    await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
+      timeout: 30000,
+    });
     const mediaUrls = await getUniqueMediaUrls(page);
 
     // Get the date of the post
@@ -144,7 +146,7 @@ async function getUniqueMediaUrls(page) {
   let mediaUrls = [];
   const retrievedUrls = new Set();
   let hasNextPage = true;
-  const nextButton = await page.$('.x1iyjqo2 ._aao_ button[aria-label="Next"]');
+  const nextButton = await page.$('button[aria-label="Next"]._afxw._al46._al47');
   if (!nextButton) {
     // Check for single photo posts
     const singlePhoto = await page.$$eval("._aagv img", (imgs) =>
@@ -195,7 +197,7 @@ async function getUniqueMediaUrls(page) {
 
     // Check for the "Next" button within the same container
     const nextButton = await page.$(
-      '._aatg ._aatk._aatn button[aria-label="Next"]'
+      'button[aria-label="Next"]._afxw._al46._al47'
     );
     if (!nextButton) {
       hasNextPage = false;
