@@ -96,7 +96,7 @@ try {
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
   const browser = await chromium.launchPersistentContext(USER_DATA_DIR, {
-  headless:false,
+  headless:true,
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
