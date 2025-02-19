@@ -96,7 +96,7 @@ async function initialize(browser, page, url, initialMessage) {
 }
 
 async function downloadInstagramMedia(url, message) {
-  const cookies = JSON.parse(fs.readFileSync('cookies.json', 'utf8'));
+  const cookies = await JSON.parse(fs.readFileSync('cookies.json', 'utf8'));
   // Launch Firefox browser using Playwright
   const browser = await chromium.launchPersistentContext(USER_DATA_DIR, {
     headless: false,
