@@ -2,8 +2,8 @@ require("dotenv").config();
 const { firefox, chromium } = require("playwright");
 const axios = require("axios");
 const sharp = require("sharp");
-const path = require('path');
-const USER_DATA_DIR = path.join(__dirname, 'user_data');
+const path = require("path");
+const USER_DATA_DIR = path.join(__dirname, "user_data");
 
 async function getImageWidth(buffer) {
   try {
@@ -14,20 +14,22 @@ async function getImageWidth(buffer) {
     return -1;
   }
 }
-async function initialize(browser, page,url, initialMessage){
-try {
+async function initialize(browser, page, url, initialMessage) {
+  try {
     // Navigate to the Instagram URL
 
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
     console.log("waiting page");
     // Wait for single or multiple post container to load
-  
+
     await page.waitForSelector("._aap0, .x5yr21d.x1uhb9sk.xh8yej3, ._aagv", {
       timeout: 30000,
     });
     await page.evaluate(() => {
-      const targetElement = document.querySelector('div.x1qjc9v5.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.x1lliihq.xdt5ytf.x2lah0s.xln7xf2.xk390pu.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x4uap5.x18d9i69.xkhd6sd.x24vp2c.x1n2onr6.x11njtxf');
+      const targetElement = document.querySelector(
+        "div.x1qjc9v5.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.x1lliihq.xdt5ytf.x2lah0s.xln7xf2.xk390pu.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x4uap5.x18d9i69.xkhd6sd.x24vp2c.x1n2onr6.x11njtxf"
+      );
       if (targetElement) {
         targetElement.remove(); // Remove the element if found
       }
@@ -96,14 +98,21 @@ try {
 async function downloadInstagramMedia(url, message) {
   // Launch Firefox browser using Playwright
   const browser = await chromium.launchPersistentContext(USER_DATA_DIR, {
-  headless:true,
+    headless: true,
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
     },
-    viewport: { width: 1366, height: 1024 },  // Set custom viewport size
+    viewport: { width: 1366, height: 1024 }, // Set custom viewport size
     userAgent:
       "Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1", // Set custom user agent
+    extraHTTPHeaders: {
+      "Accept-Language": "en-US,en;q=0.9",
+      "Accept-Encoding": "gzip, deflate, br",
+      Connection: "keep-alive",
+      "Upgrade-Insecure-Requests": "1",
+      DNT: "1",
+    },
   });
 
   const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
@@ -112,41 +121,50 @@ async function downloadInstagramMedia(url, message) {
   await page.setViewportSize({ width: 1366, height: 1024 });
   await browser.addInitScript(() => {
     // This will modify the user agent for every page in this context
-    Object.defineProperty(navigator, 'userAgent', {
-      get: () => 'Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+    Object.defineProperty(navigator, "userAgent", {
+      get: () =>
+        "Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
     });
   });
-      page.on('console', (msg) => {
-      console.log(msg);
-    });
-  await page.goto('https://www.instagram.com/accounts/login/');
+  page.on("console", (msg) => {
+    console.log(msg);
+  });
+  await page.goto("https://www.instagram.com/accounts/login/");
 
-    // Wait for the login page to load
-    await page.waitForSelector('form#loginForm', { visible: true, timeout: 10000}).catch(() => {});
+  // Wait for the login page to load
+  await page
+    .waitForSelector("form#loginForm", { visible: true, timeout: 10000 })
+    .catch(() => {});
 
-// Check if the login form is visible (indicates user is not logged in yet)
-const isLoginFormVisible = await page.isVisible('form#loginForm');
+  // Check if the login form is visible (indicates user is not logged in yet)
+  const isLoginFormVisible = await page.isVisible("form#loginForm");
 
   if (!isLoginFormVisible) {
-    console.log('Already logged in!');
+    console.log("Already logged in!");
     await initialize(browser, page, url, initialMessage);
   } else {
-      // Fill in the username
-      await page.waitForSelector('input[aria-label="Phone number, username, or email"]', { visible: true });
-  await page.fill('input[aria-label="Phone number, username, or email"]', process.env.USER_NAME);
+    // Fill in the username
+    await page.waitForSelector(
+      'input[aria-label="Phone number, username, or email"]',
+      { visible: true }
+    );
+    await page.fill(
+      'input[aria-label="Phone number, username, or email"]',
+      process.env.USER_NAME
+    );
 
-  // Fill in the password
-  await page.waitForSelector('input[aria-label="Password"]', { visible: true });
-  await page.fill('input[aria-label="Password"]', process.env.SECRET);
-  await page.waitForSelector('button[type="submit"]:not([disabled])', { visible: true });
-  await page.click('button[type="submit"]');
-  await page.waitForTimeout(10000);
-  await initialize(browser, page, url, initialMessage);
+    // Fill in the password
+    await page.waitForSelector('input[aria-label="Password"]', {
+      visible: true,
+    });
+    await page.fill('input[aria-label="Password"]', process.env.SECRET);
+    await page.waitForSelector('button[type="submit"]:not([disabled])', {
+      visible: true,
+    });
+    await page.click('button[type="submit"]');
+    await page.waitForTimeout(10000);
+    await initialize(browser, page, url, initialMessage);
   }
-
-
-
-  
 }
 
 async function sendMediaAttachments(url, attachments, initialMessage) {
@@ -183,7 +201,9 @@ async function getUniqueMediaUrls(page) {
   let mediaUrls = [];
   const retrievedUrls = new Set();
   let hasNextPage = true;
-  const nextButton = await page.$('button[aria-label="Next"]._afxw._al46._al47');
+  const nextButton = await page.$(
+    'button[aria-label="Next"]._afxw._al46._al47'
+  );
   if (!nextButton) {
     // Check for single photo posts
     const singlePhoto = await page.$$eval("._aagv img", (imgs) =>
