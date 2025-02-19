@@ -4,7 +4,7 @@ const axios = require("axios");
 const sharp = require("sharp");
 const path = require("path");
 const USER_DATA_DIR = path.join(__dirname, "user_data");
-
+const fs = require('fs');
 async function getImageWidth(buffer) {
   try {
     const metadata = await sharp(buffer).metadata();
@@ -96,9 +96,10 @@ async function initialize(browser, page, url, initialMessage) {
 }
 
 async function downloadInstagramMedia(url, message) {
+  const cookies = JSON.parse(fs.readFileSync('cookies.json', 'utf8'));
   // Launch Firefox browser using Playwright
   const browser = await chromium.launchPersistentContext(USER_DATA_DIR, {
-    headless: true,
+    headless: false,
     logger: {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
@@ -106,17 +107,8 @@ async function downloadInstagramMedia(url, message) {
     viewport: { width: 1366, height: 1024 }, // Set custom viewport size
     userAgent:
       "Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1", // Set custom user agent
-    extraHTTPHeaders: {
-    // Remove or adjust headers as needed
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Connection': 'keep-alive',
-    // Ensure Upgrade-Insecure-Requests is not included
-    'Upgrade-Insecure-Requests': undefined,  // This effectively removes the header
-    'DNT': '1',  // Do Not Track header, often used for privacy
-  },
   });
-
+  await browser.addCookies(cookies);
   const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
 
   const page = await browser.newPage();
@@ -128,11 +120,13 @@ async function downloadInstagramMedia(url, message) {
         "Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
     });
   });
-  page.on("console", (msg) => {
-    console.log(msg);
-  });
+  // page.on("console", (msg) => {
+  //   console.log(msg);
+  // });
   await page.goto("https://www.instagram.com/accounts/login/");
-
+// const cookies = await page.context().cookies();
+//   fs.writeFileSync('cookies.json', JSON.stringify(cookies));
+//   console.log('Cookies saved!');
   // Wait for the login page to load
   await page
     .waitForSelector("form#loginForm", { visible: true, timeout: 10000 })
