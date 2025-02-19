@@ -100,7 +100,6 @@ async function downloadInstagramMedia(url, message) {
       isEnabled: (name, severity) => name === "api",
       log: (name, severity, message, args) => console.log(`${name} ${message}`),
     },
-    headless: false,  // Set to true for headless mode
     viewport: { width: 1366, height: 1024 },  // Set custom viewport size
     userAgent:
       "Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1", // Set custom user agent
