@@ -107,12 +107,14 @@ async function downloadInstagramMedia(url, message) {
     userAgent:
       "Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1", // Set custom user agent
     extraHTTPHeaders: {
-      "Accept-Language": "en-US,en;q=0.9",
-      "Accept-Encoding": "gzip, deflate, br",
-      Connection: "keep-alive",
-      "Upgrade-Insecure-Requests": "1",
-      DNT: "1",
-    },
+    // Remove or adjust headers as needed
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    // Ensure Upgrade-Insecure-Requests is not included
+    'Upgrade-Insecure-Requests': undefined,  // This effectively removes the header
+    'DNT': '1',  // Do Not Track header, often used for privacy
+  },
   });
 
   const initialMessage = await message.reply(`Retrieving yakgwa goodies...`);
